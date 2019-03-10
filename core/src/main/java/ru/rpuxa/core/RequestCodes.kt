@@ -1,6 +1,6 @@
-package ru.rpuxa.bomjonline.viewmodel
+package ru.rpuxa.core
 
-enum class RequestCodes(var code: Int) {
+enum class RequestCodes(val code: Int, val string: String = errorCode(code)) {
     NO_ERROR(0),
     BAD_ARGUMENTS(1),
     UNKNOWN_TOKEN(2),
@@ -12,6 +12,13 @@ enum class RequestCodes(var code: Int) {
     INCORRECT_EMAIL(8),
     LOGIN_ALREADY_EXISTS(9),
     EMAIL_ALREADY_USED(10),
-    INCORRECT_LOGIN_OR_PASSWORD(11)
+    INCORRECT_LOGIN_OR_PASSWORD(11),
+    OUT_OF_SYNC(12),
+    WRONG_ACTION_ID(13),
+    WRONG_USER_ID(14)
     ;
+
 }
+
+private fun errorCode(code: Int) = "{\"error_code\":$code}"
+

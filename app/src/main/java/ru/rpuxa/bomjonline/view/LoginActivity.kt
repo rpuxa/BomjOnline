@@ -7,8 +7,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding.widget.RxTextView
 import kotlinx.android.synthetic.main.login_activity.*
+import org.jetbrains.anko.longToast
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.support.v4.act
-import org.jetbrains.anko.toast
 import ru.rpuxa.bomjonline.*
 import ru.rpuxa.bomjonline.view.fragments.CloudFragment
 import ru.rpuxa.bomjonline.viewmodel.LoginViewModel
@@ -33,6 +34,7 @@ import ru.rpuxa.bomjonline.viewmodel.LoginViewModel.Companion.TOKEN_EMPTY
 import ru.rpuxa.bomjonline.viewmodel.LoginViewModel.Companion.TOKEN_GETTING
 import ru.rpuxa.bomjonline.viewmodel.LoginViewModel.Companion.TOKEN_GOTTEN
 import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 
 class LoginActivity : AppCompatActivity() {
@@ -216,12 +218,19 @@ class LoginActivity : AppCompatActivity() {
         Observable.combineLatest(
             isLoginReady,
             isPasswordReady,
-            isEmailReady
-        ) { login, password, email ->
-            login && password && email
-        }.subscribe {
-            confirm_button.isEnabled = it
-        }
+            isEmailReady,
+            loginObservable,
+            passwordObservable
+        ) { loginReady, passwordReady, email, login, password ->
+            if (login.isBlank() || password.isBlank())
+                false
+            else
+                loginReady && passwordReady && email
+        }.observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                confirm_button.isEnabled = it
+            }
+
 
         confirm_button.setOnClickListener {
             val loginString = login.text.toString()
@@ -241,9 +250,9 @@ class LoginActivity : AppCompatActivity() {
             when (status) {
                 TOKEN_EMPTY -> logging(false)
                 TOKEN_GETTING -> logging(true)
-                TOKEN_GOTTEN -> successfulLogin(viewModel.token)
+                TOKEN_GOTTEN -> successfulLogin()
                 INCORRECT_LOGIN_OR_PASSWORD -> {
-                    toast("Неверный логин или пароль!")
+                    longToast("Неверный логин или пароль!")
                     viewModel.tokenStatus.value = TOKEN_EMPTY
                 }
             }
@@ -300,8 +309,11 @@ class LoginActivity : AppCompatActivity() {
         login_progress_bar.visibility = if (bFlag) View.VISIBLE else View.GONE
     }
 
-    private fun successfulLogin(token: String) {
-        TODO("че там дальше после входа $token")
+    private fun successfulLogin() {
+        startActivity<UpdateActivity>()
+    }
+
+    override fun onBackPressed() {
     }
 
     companion object {

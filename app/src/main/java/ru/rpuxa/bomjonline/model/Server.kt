@@ -4,10 +4,15 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 import ru.rpuxa.bomjonline.model.answers.Answer
 import ru.rpuxa.bomjonline.model.answers.LoginAnswer
 import ru.rpuxa.bomjonline.model.answers.RegParamsAnswer
+import ru.rpuxa.bomjonline.model.answers.UpdateRequired
+import ru.rpuxa.core.GameData
+import ru.rpuxa.core.PublicUserData
+import ru.rpuxa.core.UserData
 
 interface Server {
 
@@ -34,6 +39,18 @@ interface Server {
     @GET("reg_params")
     fun regParams(): Call<RegParamsAnswer>
 
+    @GET("check_update")
+    fun checkUpdate(@Query("hash") hash: Int): Call<UpdateRequired>
+
+    @POST("update")
+    fun update(): Call<GameData>
+
+    @POST("private_user_info")
+    fun getUserData(@Query("token") token: String): Call<UserData>
+
+    @GET("user_info")
+    fun getUserData(@Query("id") id: Int): Call<PublicUserData>
+
 
     companion object {
         private const val IP = "http://192.168.137.1"
@@ -43,9 +60,7 @@ interface Server {
         fun create(): Server =
             Retrofit.Builder()
                 .baseUrl(API_ADDRESS)
-                .addConverterFactory(
-                    GsonConverterFactory.create()
-                )
+                .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(Server::class.java)
     }

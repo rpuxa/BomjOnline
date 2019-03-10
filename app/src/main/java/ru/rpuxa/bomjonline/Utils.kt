@@ -11,7 +11,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-suspend fun <T> Call<T>.await() = suspendCoroutine<T> {
+suspend inline fun <T> Call<T>.await() = suspendCoroutine<T> {
     enqueue(object : Callback<T> {
         override fun onFailure(call: Call<T>?, t: Throwable) {
             it.resumeWithException(t)
@@ -37,7 +37,7 @@ var <T> MutableLiveData<T>.postValue: T
 
 inline fun <reified V : ViewModel> FragmentActivity.getViewModel() = ViewModelProviders.of(this).get(V::class.java)
 
-fun <T> LiveData<T>.observe(owner: LifecycleOwner, block: (T) -> Unit) {
+inline fun <T> LiveData<T>.observe(owner: LifecycleOwner, crossinline block: (T) -> Unit) {
     observe(owner, Observer { block(it) })
 }
 

@@ -8,10 +8,11 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ru.rpuxa.bomjonline.MutableLiveData
 import ru.rpuxa.bomjonline.await
-import ru.rpuxa.bomjonline.model.Model
+import ru.rpuxa.bomjonline.model
 import ru.rpuxa.bomjonline.model.answers.Answer
 import ru.rpuxa.bomjonline.model.answers.RegParamsAnswer
 import ru.rpuxa.bomjonline.postValue
+import ru.rpuxa.core.RequestCodes
 import java.io.IOException
 
 class LoginViewModel : ViewModel() {
@@ -32,9 +33,6 @@ class LoginViewModel : ViewModel() {
     val emailStatus: LiveData<Int> get() = _emailStatus
 
     val tokenStatus = MutableLiveData(TOKEN_EMPTY)
-
-    var token = ""
-        private set
 
 
     val loginToCheck = MutableLiveData<String?>(null)
@@ -57,7 +55,7 @@ class LoginViewModel : ViewModel() {
 
     fun loadRegParams() {
         trySendRequest {
-            _regParams.postValue = Model.server.regParams().await()
+            _regParams.postValue = model.server.regParams().await()
             checkLogin()
             checkPassword()
             checkEmail()
@@ -87,9 +85,9 @@ class LoginViewModel : ViewModel() {
         if (regParams == null)
             return
         trySendRequest {
-            val error = Model.server.checkReg(login = login).await()
+            val error = model.server.checkReg(login = login).await()
             _loginStatus.postValue =
-                if (error == RequestCodes.LOGIN_ALREADY_EXISTS) LOGIN_ALREADY_USED else {
+                if (error.errorCode == RequestCodes.LOGIN_ALREADY_EXISTS.code) LOGIN_ALREADY_USED else {
                     unknownError(error)
                     LOGIN_AVAILABLE
                 }
@@ -123,7 +121,7 @@ class LoginViewModel : ViewModel() {
         }
         _emailStatus.postValue = EMAIL_CHECKING
         trySendRequest {
-            val error = Model.server.checkReg(email = email).await()
+            val error = model.server.checkReg(email = email).await()
             _emailStatus.postValue =
                 if (error.errorCode == RequestCodes.EMAIL_ALREADY_USED.code) EMAIL_ALREADY_USED else {
                     unknownError(error)
@@ -149,9 +147,10 @@ class LoginViewModel : ViewModel() {
     fun register(login: String, password: String, email: String) {
         tokenStatus.value = TOKEN_GETTING
         trySendRequest {
-            val ans = Model.server.reg(login, password, email).await()
+            val ans = model.server.reg(login, password, email).await()
             unknownError(ans)
-            token = ans.token
+            val token = ans.token
+            model.dataBase.saveToken(token)
             tokenStatus.postValue = TOKEN_GOTTEN
         }
     }
@@ -159,11 +158,12 @@ class LoginViewModel : ViewModel() {
     fun login(login: String, password: String) {
         tokenStatus.value = TOKEN_GETTING
         trySendRequest {
-            val ans = Model.server.login(login, password).await()
+            val ans = model.server.login(login, password).await()
             val code =
                 if (ans.errorCode == RequestCodes.INCORRECT_LOGIN_OR_PASSWORD.code) INCORRECT_LOGIN_OR_PASSWORD else {
                     unknownError(ans)
-                    token = ans.token
+                    val token = ans.token
+                    model.dataBase.saveToken(token)
                     tokenStatus.postValue = TOKEN_GOTTEN
                     TOKEN_GOTTEN
                 }
