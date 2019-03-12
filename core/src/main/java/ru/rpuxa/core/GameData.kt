@@ -3,9 +3,10 @@ package ru.rpuxa.core
 import java.util.*
 
 class GameData(
-    val directActions: List<DirectAction>
+    val districtsActions: List<DistrictAction>,
+    val districts: List<District>
 ) {
     fun hash(): Int = Objects.hash(
-        directActions
+        districtsActions, districts
     )
 }

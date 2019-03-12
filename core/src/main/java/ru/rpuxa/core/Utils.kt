@@ -11,3 +11,5 @@ fun Random.nextInt(from: Int, to: Int) = from + nextInt(to - from)
 operator fun StringBuilder.plusAssign(char: Char) {
     append(char)
 }
+
+fun error(): Nothing = kotlin.error("Empty message")

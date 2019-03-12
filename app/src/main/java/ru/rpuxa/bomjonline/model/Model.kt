@@ -10,17 +10,16 @@ class Model(appContext: Context) {
     val dataBase = DataBase.create(appContext)
 
     private lateinit var _gameData: GameData
-    var gameData: GameData
-        get() = _gameData
-        set(value) {
-            _gameData = value
-            dataBase.updateDirectActions(value.directActions)
-        }
+    val gameData: GameData get() = _gameData
+
     lateinit var profile: UserData
 
     fun loadGameData() {
-        val directActions = dataBase.getAllDirectActions()
+        _gameData = dataBase.loadGameData()
+    }
 
-        _gameData = GameData(directActions)
+    fun updateGameData(gameData: GameData) {
+        _gameData = gameData
+        dataBase.updateGameData(gameData)
     }
 }

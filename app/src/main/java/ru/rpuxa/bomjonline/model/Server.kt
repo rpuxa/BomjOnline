@@ -51,6 +51,12 @@ interface Server {
     @GET("user_info")
     fun getUserData(@Query("id") id: Int): Call<PublicUserData>
 
+    @GET("make_direct_action")
+    fun makeDirectAction(
+        @Query("token") token: String,
+        @Query("id") id: Int
+    ): Call<Answer>
+
 
     companion object {
         private const val IP = "http://192.168.137.1"
