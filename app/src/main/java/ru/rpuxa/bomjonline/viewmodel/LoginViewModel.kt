@@ -9,9 +9,9 @@ import kotlinx.coroutines.launch
 import ru.rpuxa.bomjonline.MutableLiveData
 import ru.rpuxa.bomjonline.await
 import ru.rpuxa.bomjonline.model
-import ru.rpuxa.bomjonline.model.answers.Answer
-import ru.rpuxa.bomjonline.model.answers.RegParamsAnswer
 import ru.rpuxa.bomjonline.postValue
+import ru.rpuxa.core.Answer
+import ru.rpuxa.core.RegParamsAnswer
 import ru.rpuxa.core.RequestCodes
 import java.io.IOException
 
@@ -41,6 +41,11 @@ class LoginViewModel : ViewModel() {
 
 
     init {
+        GlobalScope.launch {
+            if (model.dataBase.loadToken() != null)
+                tokenStatus.postValue = TOKEN_GOTTEN
+        }
+
         loginToCheck.observeForever {
             checkLogin()
         }
@@ -53,7 +58,7 @@ class LoginViewModel : ViewModel() {
         loadRegParams()
     }
 
-    fun loadRegParams() {
+    private fun loadRegParams() {
         trySendRequest {
             _regParams.postValue = model.server.regParams().await()
             checkLogin()

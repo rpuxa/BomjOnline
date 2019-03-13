@@ -18,7 +18,8 @@ fun createNewUser(login: String, password: String, mail: String): UserData =
         100,
         100,
         100,
-        0
+        0,
+        HashMap()
     )
 
 private const val TOKEN_LENGTH = 32

@@ -2,8 +2,9 @@ package ru.rpuxa.bomjonlineserver.requests
 
 import ru.rpuxa.bomjonlineserver.Request
 import ru.rpuxa.bomjonlineserver.toJson
+import ru.rpuxa.core.RegParamsAnswer
 
-object RegParameters : Request("reg_params") {
+object RegParameters : Request("regParams") {
     override fun request(query: Query): String {
         return ANSWER
     }
@@ -16,11 +17,11 @@ object RegParameters : Request("reg_params") {
     const val PASSWORD_MAX_LENGTH = 16
 
     @JvmStatic
-    private val ANSWER = mapOf(
-        "login_min_length" to LOGIN_MIN_LENGTH,
-        "login_max_length" to LOGIN_MAX_LENGTH,
-        "login_symbols" to LOGIN_SYMBOLS,
-        "password_min_length" to PASSWORD_MIN_LENGTH,
-        "password_max_length" to PASSWORD_MAX_LENGTH
+    private val ANSWER = RegParamsAnswer(
+        LOGIN_MIN_LENGTH,
+        LOGIN_MAX_LENGTH,
+        LOGIN_SYMBOLS,
+        PASSWORD_MIN_LENGTH,
+        PASSWORD_MAX_LENGTH
     ).toJson()
 }

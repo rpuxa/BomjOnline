@@ -9,11 +9,11 @@ import ru.rpuxa.bomjonline.MutableLiveData
 import ru.rpuxa.bomjonline.await
 import ru.rpuxa.bomjonline.model
 import ru.rpuxa.bomjonline.postValue
-import ru.rpuxa.core.District
 import ru.rpuxa.core.DistrictAction
 import ru.rpuxa.core.GameData
 import ru.rpuxa.core.RequestCodes
 import ru.rpuxa.core.UserData.Companion.NO_ERROR
+import java.io.IOException
 
 class ProfileViewModel : ViewModel() {
 
@@ -38,6 +38,16 @@ class ProfileViewModel : ViewModel() {
     private val _error = MutableLiveData(RequestCodes.NO_ERROR.code)
     val error: LiveData<Int> get() = _error
 
+    private val _noInternetConnection = MutableLiveData(false)
+    val noInternetConnection: LiveData<Boolean> get() = _noInternetConnection
+
+    private val _level = MutableLiveData(1)
+    val level: LiveData<Int> get() = _level
+
+    private val _login = MutableLiveData<String>()
+    val login: LiveData<String> get() = _login
+
+
     val gameData: GameData get() = model.gameData
 
 
@@ -45,8 +55,8 @@ class ProfileViewModel : ViewModel() {
         update()
     }
 
-    fun getDirectActionProgress(districtAction: DistrictAction): Int {
-        return model.profile.directActionsProgress[districtAction.id] ?: 0
+    fun getDistrictActionProgress(districtAction: DistrictAction): Int {
+        return model.profile.districtActionsProgress[districtAction.id] ?: 0
     }
 
     private fun update() {
@@ -57,6 +67,8 @@ class ProfileViewModel : ViewModel() {
             _health.value = health
             _maxEnergy.value = maxEnergy
             _maxHealth.value = maxHealth
+            _level.value = level
+            _login.value = login
         }
     }
 
@@ -66,14 +78,17 @@ class ProfileViewModel : ViewModel() {
         update()
 
         GlobalScope.launch {
-            val result = model.server.makeDirectAction(model.dataBase.loadToken()!!, action.id).await().errorCode
-            if (result == RequestCodes.OUT_OF_SYNC.code ||
-                result == RequestCodes.UNKNOWN_TOKEN.code
-            ) {
-                _error.postValue = result
+            try {
+                val result = model.server.makeDirectAction(model.dataBase.loadToken()!!, action.id).await().errorCode
+                if (result == RequestCodes.OUT_OF_SYNC.code ||
+                    result == RequestCodes.UNKNOWN_TOKEN.code
+                ) {
+                    _error.postValue = result
+                } else if (result != RequestCodes.NO_ERROR.code)
+                    error(result)
+            } catch (e: IOException) {
+                _noInternetConnection.postValue = true
             }
-            if (result != RequestCodes.NO_ERROR.code)
-                error(result)
         }
 
         return res

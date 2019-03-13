@@ -8,6 +8,7 @@ import ru.rpuxa.bomjonline.MutableLiveData
 import ru.rpuxa.bomjonline.await
 import ru.rpuxa.bomjonline.model
 import ru.rpuxa.bomjonline.postValue
+import ru.rpuxa.core.RequestCodes
 import java.io.IOException
 
 class UpdateViewModel : ViewModel() {
@@ -17,6 +18,9 @@ class UpdateViewModel : ViewModel() {
 
     private val _noInternetConnection = MutableLiveData(false)
     val noInternetConnection: LiveData<Boolean> get() = _noInternetConnection
+
+    private val _error = MutableLiveData(RequestCodes.NO_ERROR.code)
+    val error: LiveData<Int> get() = _error
 
     init {
         start()
@@ -31,11 +35,18 @@ class UpdateViewModel : ViewModel() {
                 val updateRequired = model.server.checkUpdate(model.gameData.hash()).await()
                 if (updateRequired.required == 1) {
                     _loadingState.postValue = LOADING_UPDATE
-                    model.gameData = model.server.update().await()
+                    model.updateGameData(
+                        model.server.update().await()
+                    )
                 }
                 _loadingState.postValue = LOADING_PROFILE
                 val token = model.dataBase.loadToken()!!
-                model.profile = model.server.getUserData(token).await()
+                val answer = model.server.getUserData(token).await()
+                if (answer.isError) {
+                    _error.postValue = answer.errorCode
+                    return@launch
+                }
+                model.profile = answer.user
                 _loadingState.postValue = COMPLETE
             } catch (e: IOException) {
                 e.printStackTrace()

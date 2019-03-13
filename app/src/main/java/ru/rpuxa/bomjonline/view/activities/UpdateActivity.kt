@@ -1,4 +1,4 @@
-package ru.rpuxa.bomjonline.view
+package ru.rpuxa.bomjonline.view.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -8,12 +8,14 @@ import org.jetbrains.anko.support.v4.act
 import ru.rpuxa.bomjonline.R
 import ru.rpuxa.bomjonline.getViewModel
 import ru.rpuxa.bomjonline.observe
+import ru.rpuxa.bomjonline.view.NoConnectionDialog
 import ru.rpuxa.bomjonline.viewmodel.UpdateViewModel
 import ru.rpuxa.bomjonline.viewmodel.UpdateViewModel.Companion.CHECKING_UPDATE
 import ru.rpuxa.bomjonline.viewmodel.UpdateViewModel.Companion.COMPLETE
 import ru.rpuxa.bomjonline.viewmodel.UpdateViewModel.Companion.LOADING_PROFILE
 import ru.rpuxa.bomjonline.viewmodel.UpdateViewModel.Companion.LOADING_UPDATE
 import ru.rpuxa.bomjonline.viewmodel.UpdateViewModel.Companion.PREPARING
+import ru.rpuxa.core.error
 
 class UpdateActivity : AppCompatActivity() {
 
@@ -36,7 +38,7 @@ class UpdateActivity : AppCompatActivity() {
                     onUpdated()
                     return@observe
                 }
-                else -> throw IllegalStateException()
+                else -> error()
             }
             loading_text.text = text
         }
@@ -45,6 +47,11 @@ class UpdateActivity : AppCompatActivity() {
             if (it) {
                 NCDialog().show(supportFragmentManager, "")
             }
+        }
+
+        viewModel.error.observe(this) {
+            if (it != 0)
+                startActivity<ErrorActivity>(ErrorActivity.ERROR_CODE to it)
         }
     }
 

@@ -19,6 +19,7 @@ abstract class Request(val name: String) {
 
         val ans = request(Query(answer))
         println("<< $ans")
+        println()
         return ans
     }
 

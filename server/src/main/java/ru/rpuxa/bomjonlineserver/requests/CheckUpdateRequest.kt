@@ -5,7 +5,7 @@ import ru.rpuxa.bomjonlineserver.requests.UpdateRequest.UPDATE_HASH
 import ru.rpuxa.bomjonlineserver.toJson
 import ru.rpuxa.core.RequestCodes
 
-object CheckUpdateRequest : Request("check_update") {
+object CheckUpdateRequest : Request("checkUpdate") {
     override fun request(query: Query): String {
         val hash = query["hash"]?.toIntOrNull() ?: return RequestCodes.BAD_ARGUMENTS.string
 

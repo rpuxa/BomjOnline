@@ -40,5 +40,12 @@ class StatusFragment : Fragment() {
         profileViewModel.rubles.observe(this) {
             status_rubles.text = it.toString()
         }
+
+        Observable.combineLatest(
+            profileViewModel.login.toObservable(this),
+            profileViewModel.level.toObservable(this)
+        ) { login, level -> "$login ($level уровень)" }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(status_name::setText)
     }
 }

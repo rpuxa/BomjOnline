@@ -11,8 +11,12 @@ class ContentAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         DistrictActionsFragment()
     )
 
+    inline fun <reified T : Fragment> indexOf() =
+        fragments.indexOfFirst { it is T }
+
+
     override fun getItem(position: Int): Fragment =
-            fragments[position]
+        fragments[position]
 
     /**
      * Return the number of views available.

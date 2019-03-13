@@ -35,7 +35,8 @@ var <T> MutableLiveData<T>.postValue: T
         postValue(value)
     }
 
-inline fun <reified V : ViewModel> FragmentActivity.getViewModel() = ViewModelProviders.of(this).get(V::class.java)
+inline fun <reified V : ViewModel> FragmentActivity.getViewModel() =
+    ViewModelProviders.of(this).get(V::class.java)
 
 inline fun <T> LiveData<T>.observe(owner: LifecycleOwner, crossinline block: (T) -> Unit) {
     observe(owner, Observer { block(it) })

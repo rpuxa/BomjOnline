@@ -16,7 +16,7 @@ import ru.rpuxa.core.GameData
 )
 abstract class DataBase : RoomDatabase() {
 
-    fun saveToken(token: String) {
+    fun saveToken(token: String?) {
         userDao().save(User(token = token))
     }
 
@@ -31,7 +31,7 @@ abstract class DataBase : RoomDatabase() {
                 districtActionsDao.save(
                     DirectActionItem(
                         id,
-                        directId,
+                        districtId,
                         name,
                         energyRemove,
                         authorityAdd,
@@ -87,7 +87,7 @@ abstract class DataBase : RoomDatabase() {
     class User(
         @PrimaryKey
         val id: Int = 0,
-        val token: String
+        val token: String?
     )
 
     protected abstract fun directActionsDao(): DistrictActionsDao

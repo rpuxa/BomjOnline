@@ -1,5 +1,7 @@
 package ru.rpuxa.core
 
+import kotlin.math.sqrt
+
 
 class UserData(
     login: String,
@@ -12,12 +14,13 @@ class UserData(
     var maxEnergy: Int,
     var health: Int,
     var maxHealth: Int,
-    directAuthority: Long,
-    val directActionsProgress: HashMap<Int, Int>
-) : PublicUserData(login, id, directAuthority) {
+    districtAuthority: Long,
+    val districtActionsProgress: HashMap<Int, Int>
+) : PublicUserData(login, id, districtAuthority) {
 
     val allAuthority: Long get() = directAuthority
 
+    val level: Int get() = ((1 + sqrt(1.0 + 4 * allAuthority / 100)) / 2).toInt() + 1
 
     fun add(
         energy: Int = 0,
@@ -43,11 +46,11 @@ class UserData(
         if (!add(energy = -action.energyRemove))
             return NOT_ENOUGH_ENERGY
 
-        val c = directActionsProgress[action.id] ?: 0
+        val c = districtActionsProgress[action.id] ?: 0
         if (c == action.count)
             return DIRECT_ACTION_ALREADY_FINISHED
 
-        directActionsProgress[action.id] = c + 1
+        districtActionsProgress[action.id] = c + 1
         add(directAuthority = action.authorityAdd, rubles = action.rublesAdd)
 
         return NO_ERROR

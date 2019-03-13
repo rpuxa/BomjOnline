@@ -9,7 +9,7 @@ import ru.rpuxa.bomjonlineserver.requests.RegParameters.PASSWORD_MIN_LENGTH
 import ru.rpuxa.core.RequestCodes
 import ru.rpuxa.core.RequestCodes.LOGIN_IS_TOO_SHORT
 
-object CheckRegRequest : Request("check_reg") {
+object CheckRegRequest : Request("checkReg") {
     override fun request(query: Request.Query): String {
         val login = query["login"]
         val password = query["password"]

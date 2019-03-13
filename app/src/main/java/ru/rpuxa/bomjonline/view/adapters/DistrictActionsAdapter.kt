@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.direct_action.view.*
+import kotlinx.android.synthetic.main.district_action.view.*
 import org.jetbrains.anko.toast
 import ru.rpuxa.bomjonline.R
 import ru.rpuxa.bomjonline.getViewModel
@@ -30,7 +30,7 @@ class DistrictActionsAdapter : ListAdapter<DistrictAction, DistrictActionsAdapte
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DirectActionViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.direct_action, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.district_action, parent, false)
         return DirectActionViewHolder(view)
     }
 
@@ -40,8 +40,8 @@ class DistrictActionsAdapter : ListAdapter<DistrictAction, DistrictActionsAdapte
         getItem(position).run {
             val viewModel = activity.getViewModel<ProfileViewModel>()
             fun updateProgress() {
-                val progress = viewModel.getDirectActionProgress(this)
-                holder.rubles.text = if (progress == count) "Выполнено!" else "$progress / $count"
+                val progress = viewModel.getDistrictActionProgress(this)
+                holder.progress.text = if (progress == count) "Выполнено!" else "$progress / $count"
             }
 
             holder.authority.text = "+$authorityAdd"
@@ -60,6 +60,7 @@ class DistrictActionsAdapter : ListAdapter<DistrictAction, DistrictActionsAdapte
                 activity.toast(text)
                 updateProgress()
             }
+            updateProgress()
         }
     }
 
@@ -68,6 +69,6 @@ class DistrictActionsAdapter : ListAdapter<DistrictAction, DistrictActionsAdapte
             oldItem.id == newItem.id
 
         override fun areContentsTheSame(oldItem: DistrictAction, newItem: DistrictAction): Boolean =
-            areItemsTheSame(oldItem, newItem)
+            oldItem.id == newItem.id
     }
 }

@@ -20,5 +20,5 @@ enum class RequestCodes(val code: Int, val string: String = errorCode(code)) {
 
 }
 
-private fun errorCode(code: Int) = "{\"error_code\":$code}"
+private fun errorCode(code: Int) = "{\"errorCode\":$code}"
 

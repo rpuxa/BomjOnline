@@ -7,5 +7,4 @@ val dataBase: UserDataBase = ListUserDataBase()
 
 fun main() {
     HTTPServer().run()
-
 }

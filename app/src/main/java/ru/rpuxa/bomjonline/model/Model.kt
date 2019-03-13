@@ -15,7 +15,8 @@ class Model(appContext: Context) {
     lateinit var profile: UserData
 
     fun loadGameData() {
-        _gameData = dataBase.loadGameData()
+        val loadGameData = dataBase.loadGameData()
+        _gameData = loadGameData
     }
 
     fun updateGameData(gameData: GameData) {

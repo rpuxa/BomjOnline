@@ -6,13 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
-import ru.rpuxa.bomjonline.model.answers.Answer
-import ru.rpuxa.bomjonline.model.answers.LoginAnswer
-import ru.rpuxa.bomjonline.model.answers.RegParamsAnswer
-import ru.rpuxa.bomjonline.model.answers.UpdateRequired
-import ru.rpuxa.core.GameData
-import ru.rpuxa.core.PublicUserData
-import ru.rpuxa.core.UserData
+import ru.rpuxa.core.*
 
 interface Server {
 
@@ -29,29 +23,29 @@ interface Server {
         @Query("email") email: String
     ): Call<LoginAnswer>
 
-    @GET("check_reg")
+    @GET("checkReg")
     fun checkReg(
         @Query("login") login: String = NULL,
         @Query("password") password: String = NULL,
         @Query("email") email: String = NULL
     ): Call<Answer>
 
-    @GET("reg_params")
+    @GET("regParams")
     fun regParams(): Call<RegParamsAnswer>
 
-    @GET("check_update")
+    @GET("checkUpdate")
     fun checkUpdate(@Query("hash") hash: Int): Call<UpdateRequired>
 
     @POST("update")
     fun update(): Call<GameData>
 
-    @POST("private_user_info")
-    fun getUserData(@Query("token") token: String): Call<UserData>
+    @POST("user")
+    fun getUserData(@Query("token") token: String): Call<UserAnswer>
 
-    @GET("user_info")
-    fun getUserData(@Query("id") id: Int): Call<PublicUserData>
+    @GET("publicUser")
+    fun getUserData(@Query("id") id: Int): Call<PublicUserAnswer>
 
-    @GET("make_direct_action")
+    @GET("makeDistrictAction")
     fun makeDirectAction(
         @Query("token") token: String,
         @Query("id") id: Int

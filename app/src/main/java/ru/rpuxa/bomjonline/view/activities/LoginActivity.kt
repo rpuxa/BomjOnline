@@ -1,4 +1,4 @@
-package ru.rpuxa.bomjonline.view
+package ru.rpuxa.bomjonline.view.activities
 
 import android.graphics.Typeface
 import android.os.Bundle
@@ -11,6 +11,7 @@ import org.jetbrains.anko.longToast
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.support.v4.act
 import ru.rpuxa.bomjonline.*
+import ru.rpuxa.bomjonline.view.NoConnectionDialog
 import ru.rpuxa.bomjonline.view.fragments.CloudFragment
 import ru.rpuxa.bomjonline.viewmodel.LoginViewModel
 import ru.rpuxa.bomjonline.viewmodel.LoginViewModel.Companion.EMAIL_ALREADY_USED

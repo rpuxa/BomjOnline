@@ -25,6 +25,8 @@ object DistrictActions {
             add("Искать монеты у остановок", 40, 45)
             add("Лазить по помойкам", 65, 75)
         }
+
+        list.forEach { map[it.id] = it }
     }
 
     private inline fun direct(id: Int, block: DirectBuilder.() -> Unit) {

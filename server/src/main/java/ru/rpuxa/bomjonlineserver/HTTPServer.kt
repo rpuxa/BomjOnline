@@ -38,12 +38,12 @@ class HTTPServer : Runnable, AutoCloseable {
             CheckRegRequest,
             CheckUpdateRequest,
             LoginRequest,
-            MakeDirectAction,
-            PrivateUserInfoRequest,
+            MakeDistrictAction,
+            UserRequest,
             RegParameters,
             RegRequest,
             UpdateRequest,
-            UserInfoRequest,
+            PublicUserRequest,
             WelcomeRequest
         )
     }
