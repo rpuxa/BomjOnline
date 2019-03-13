@@ -16,7 +16,7 @@
             android:layout_height="0dp" android:layout_weight="0"
             app:layout_constraintBottom_toTopOf="@+id/include"
             app:layout_constraintTop_toBottomOf="@+id/include2" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" android:id="@+id/viewPager"/>
+            app:layout_constraintEnd_toEndOf="parent" android:id="@+id/content_pager"/>
     <include android:layout_width="match_parent" android:layout_height="wrap_content" layout="@layout/control_bar"
              app:layout_constraintStart_toStartOf="parent"
              app:layout_constraintEnd_toEndOf="parent"

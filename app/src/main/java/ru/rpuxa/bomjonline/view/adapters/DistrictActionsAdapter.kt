@@ -20,7 +20,7 @@ import ru.rpuxa.core.UserData.Companion.NOT_ENOUGH_ENERGY
 import ru.rpuxa.core.UserData.Companion.NO_ERROR
 import ru.rpuxa.core.error
 
-class DirectActionsAdapter : ListAdapter<DistrictAction, DirectActionsAdapter.DirectActionViewHolder>(Diff) {
+class DistrictActionsAdapter : ListAdapter<DistrictAction, DistrictActionsAdapter.DirectActionViewHolder>(Diff) {
     class DirectActionViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val energy: TextView = view.direct_action_energy
         val rubles: TextView = view.direct_action_rubles

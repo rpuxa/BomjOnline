@@ -9,7 +9,9 @@ import ru.rpuxa.bomjonline.MutableLiveData
 import ru.rpuxa.bomjonline.await
 import ru.rpuxa.bomjonline.model
 import ru.rpuxa.bomjonline.postValue
+import ru.rpuxa.core.District
 import ru.rpuxa.core.DistrictAction
+import ru.rpuxa.core.GameData
 import ru.rpuxa.core.RequestCodes
 import ru.rpuxa.core.UserData.Companion.NO_ERROR
 
@@ -35,6 +37,9 @@ class ProfileViewModel : ViewModel() {
 
     private val _error = MutableLiveData(RequestCodes.NO_ERROR.code)
     val error: LiveData<Int> get() = _error
+
+    val gameData: GameData get() = model.gameData
+
 
     init {
         update()
